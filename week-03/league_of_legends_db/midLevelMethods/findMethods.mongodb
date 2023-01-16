@@ -1,0 +1,48 @@
+// Retorna um documento que atenda o operador lógico lessThan: $lt.
+db.items.find({ 'price.total': { $lt: 2000 } }).sort({ 'price.total': -1 })
+
+// Retorna um documento que atenda o operador lógico greaterThan: $gt.
+db.items.find({ 'price.total': { $gt: 2000 } }).sort({ 'price.total': -1 })
+
+// Retorna um documento que atenda o operador lógico greaterThan or equal: $gte.
+db.items.find({ 'price.total': { $gte: 3500 } }).sort({ 'price.total': 1 })
+
+// Retorna um documento que atenda o operador lógico lessThan or equal: $lte.
+db.items.find({ 'price.total': { $lte: 3500 } }).sort({ 'price.total': -1 })
+
+// Retorna um documento que atenda uma operação de between com operadores lógicos.
+db.items.find({ 'price.total': { $gte: 3000, $lte: 3500 } }).sort({ 'price.total': 1 })
+
+// Retorna um documento que atenda o operador lógico equal: $eq.
+db.items.find({ 'price.total': { $eq: 3600 } })
+
+// Retorna um documento que atenda o operador lógico not equal: $ne.
+db.items.find({ purchasable: { $ne: true } }) // Retorna purchasables false
+
+// Retorna um documento com base em dois filtros.
+db.champions.find({ 'stats.hp': { $gte: 550 }, 'stats.movespeed': { $gte: 350 } })
+
+// Retorna um documento com base em dois filtros ou mais filtros utilizando $and.
+db.champions.find({
+  $and: [
+    {'stats.hp': { $lte: 550 }},
+    {'stats.mp': { $gte: 350 }},
+    {'stats.mpregen': { $gt: 7.2 }}
+  ]
+})
+
+// Retorna um documento OU outro com base no filtro [ util para quando você precisa de um filtro entre mais de uma propriedade ].
+db.champions.find({ $or: [{'stats.hp': { $gte: 600 }}, {'stats.mp': { $lte: 250 }}] });
+
+// Retorna um documento OU outro com base no filtro
+db.champions.find({ 'stats.hp': { $in: [600, 500] } });
+
+// Retorna documentos aplicando filtros, porem com o operador $not que nega os próximos filtros em seu escopo.
+db.champions.find({ 'stats.hp': { $not: { $lt: 600 } }}).sort({ 'stats.hp': -1 })
+
+// Retorna documento aplicando filtros ques serão TODOS negados pelo $nor
+db.champions.find({ 
+  $nor: [
+    {'stats.hp': { $lt: 600 }},
+    {'stats.attackrange': { $gt: 150 }}
+] }).sort({ 'stats.hp': -1 })

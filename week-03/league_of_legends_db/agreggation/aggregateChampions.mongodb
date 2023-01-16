@@ -1,0 +1,30 @@
+/* 
+*  Seleciona um array do documento e o desconstrói, retornando
+*  um documento para cada elemento desse array.
+*  apague os operadores e deixe apena o $unwind, execute,
+* veja seu retorno e adicione novamente o próximo operador
+* apagado ( $project ), execute e veja seu retorno, e assim sucessivamente.
+*/
+
+// O array utilizado para esta query (matchesStats) foi criado no arquivo:
+// league_of_legends_db/advancedMethods/updateMethods.mongodb
+
+db.users.aggregate([
+  {
+    $unwind: '$matchesStats' // Array base para os novos documentos
+  },
+  {
+    $project: {
+      _id: 0,
+      'username': '$username',
+      'matchDate': '$matchesStats.date',
+      'kills': '$matchesStats.kills',
+      'favoriteChampions': '$rankStats.favoriteChampions'
+    } // Novo documento a partir do array base
+  },
+  {
+    $out: 'matches' // Destino do novo documento
+    // Lembre-se que o $out não adiciona, ele substitui o conteudo do documento.
+    // Caso a coleção não exista ela é criada.
+  }
+]);

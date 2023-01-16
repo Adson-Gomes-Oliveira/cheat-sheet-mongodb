@@ -1,0 +1,4 @@
+db.createCollection('champions');
+db.createCollection('ingame_shop');
+db.createCollection('matches');
+db.createCollection('users');

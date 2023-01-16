@@ -1,0 +1,23 @@
+// Retorna todos os documentos da coleção.
+db.users.find();
+
+// Retorna um documento atendendo a condição passada [ where ].
+db.champions.find({ name: 'Aatrox' });
+
+// Retorna a quantidade de documentos que atendem a condição.
+db.items.find({ 'price.base': 300 }).count();
+
+// Retorna um documento com a operação where mas omite o campo _id e rankStats
+db.users.find({ username: 'Hevy' }, { _id: 0, rankStats: 0 });
+
+//  Limita a quantidade de resultados
+db.champions.find().limit(5);
+
+//  Pula uma quantidade determinada de resultados
+db.champions.find().skip(5);
+
+// Paginação
+db.champions.find().limit(3).skip(0);
+
+// Retorna documentos que tenham um campo especifico
+db.items.find({ 'stats.FlatMovementSpeedMod': { $exists: true } });

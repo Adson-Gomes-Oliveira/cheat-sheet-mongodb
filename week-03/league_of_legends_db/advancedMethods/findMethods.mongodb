@@ -1,0 +1,24 @@
+/* 
+* Retorna um documento que atende ao operador $elemMacth.
+* $elemMatch itera sobre algum array do documento e verifica se algum item do array
+* atende a condição passada, caso atenda, este elemento é retornado.
+*/ 
+db.users.find({ topFiveKDA: {
+  $elemMatch: { $eq: 8 }
+} });
+
+// Retorna documentos em que o array especificado na query tenha um determinado tamanho com $size.
+db.champions.find({ tags: { $size: 1 } });
+
+// Retorna documentos que contenham pelo menos um array que tenha todos os elementos definidos abaixo.
+db.champions.find({ tags: { $all: ['Assassin', 'Mage'] } });
+
+// Retorna documentos que contenham determinados caracteres no campo especificado abaixo.
+db.champions.find({ description: {$regex: /void/i} });
+
+/* 
+* Retorna documentos que atendam o filtro especificado: $mod
+* Operação abaixo retorna os documentos em que o campo especificado seja par.
+* playDaysCount / 2 resto 0
+*/
+db.users.find({ playDaysCount: {$mod: [2, 0]} });

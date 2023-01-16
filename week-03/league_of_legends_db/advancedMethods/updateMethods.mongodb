@@ -1,0 +1,65 @@
+// Adiciona itens em um array garantindo que caso hajam itens repetidos estes não sejam adicionados novamente.
+db.champions.updateMany(
+  {'stats.hp': { $gt: 550 }},
+  { $addToSet: { // Adiciona itens ao array do documento encontrado
+    tags: {
+      $each: ['could be a tank', 'Tank'] // Define os elementos a serem adicionados e garante que sejam únicos.
+    }
+  }}
+);
+
+// Remove um valor de dentro de um array de um documento que atende a condição passada.
+db.champions.updateMany(
+  { 'stats.hp': { $lte: 550 } },
+  { $pull: {
+    // tags: 'Tank' -- Pode ser utilizado assim caso queira retirar apenas 1 elemento.
+    tags: { $in: ['Tank', 'Fighter'] } // Retira as tags Tank e Figther dos documentos encontrados.
+  }}
+);
+
+// ======================================================= //
+// Preparação para o próximo comando... [ Execute essa query ]
+db.users.updateOne({ fullname: 'Adson Gomes Oliveira' }, {
+  $set: {
+    matchesStats: [
+      {
+        date: '2023/01/10',
+        kills: 15,
+        deaths: 5,
+        mvp: true
+      },
+      {
+        date: '2022/12/05',
+        kills: 9,
+        deaths: 9,
+        mvp: false
+      },
+      {
+        date: '2022/10/10',
+        kills: 2,
+        deaths: 10,
+        mvp: false
+      }
+    ]
+  }
+});
+
+db.users.find({ fullname: 'Adson Gomes Oliveira' });
+// Fim da preparação...
+// ======================================================= //
+
+// Remove um objeto que esteja dentro de um array de um documento.
+db.users.updateMany({}, {
+  $pull: { // Remover algo do array.
+    matchesStats: { // Array do qual queremos remover um objeto.
+      kills: { $lt: 10 } // Condição que o objeto precisa atender para ser removido.
+    }
+  }
+});
+
+// Remove o ultimo ou primeiro elemento do array de um documento.
+db.users.updateMany({}, {
+  $pop: {
+    matchesStats: -1 // Para remover o primeiro elemento passamos -1, se quisessemos remover o ultimo passariamos 1.
+  }
+});

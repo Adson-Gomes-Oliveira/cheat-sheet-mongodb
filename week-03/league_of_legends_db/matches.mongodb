@@ -1,0 +1,45 @@
+db.matches.insertOne({
+  blueTeam: [
+    {
+      usernameTag: "Deus Rei Varus#000",
+      champion: "Varus",
+      spells: ['Flash', 'Shield']
+    },
+    {
+      usernameTag: "Hevy#BR1",
+      champion: "Seraphine",
+      spells: ['Flash', 'Heal']
+    }
+  ],
+  redTeam: [
+    {
+      usernameTag: "O Inesquecível#MONO",
+      champion: "Yone",
+      spells: ['Flash', 'Ignite']
+    },
+    {
+      usernameTag: "NAGIGI#070",
+      champion: "Lux",
+      spells: ['Flash', 'Heal']
+    }
+  ],
+  matchDuration: "00:24:16",
+  teamStats: [
+    {
+      team: "blue",
+      upTowers: 2,
+      kills: 16,
+      deaths: 8,
+      dragons: ['Infernal', 'Ocean'],
+      win: true
+    },
+    {
+      team: "red",
+      upTowers: 0,
+      kills: 8,
+      deaths: 16,
+      dragons: ['Mountain', 'Ancient'],
+      win: false
+    }
+  ]
+})

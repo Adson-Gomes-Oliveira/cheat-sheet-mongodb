@@ -1,0 +1,113 @@
+// Fazendo update de um documento
+db.users.updateOne({'rankStats.rank': { 
+  $regex: /grand/i // Condicional para quais elementos atualizar
+}}, {
+  $set: { 'rankStats.rank': "Diamond IV" } // Atualização
+});
+
+// Fazendo update de varios documentos
+db.users.updateMany({'rankStats.rank': { 
+  $regex: /esmerald/i // Condicional para quais elementos atualizar
+}}, {
+  $set: { 'rankStats.rank': "Platinum III" } // Atualização
+});
+
+// Fazendo update de um documento e caso ele não exista é inserido na coleção
+db.users.updateOne(
+  { username: "Raast" },
+  { $set: {
+    fullname: "Miguel Oliveira",
+    username: "Raast",
+    tag: '#366',
+    playDaysCount: 253,
+    wildCores: 2690,
+    cristals: 6000,
+    topFiveKDA: [6, 8, 16, 18, 22],
+    rankStats: {
+      rank: "Platinum III",
+      highestRank: "Esmerald I",
+      wins: 0,
+      loses: 0,
+      favoriteChampions: ["Aatrox", "Sett", "Nasus"]
+    }
+  }}, { upsert: true }
+)
+db.users.find({}, {_id: 0})
+
+// Realiza um update em um array de um documento, utilizando um indice fixo para definir qual item do array atualizar
+db.users.find({ username: 'Deus Rei Varus' });
+db.users.updateOne({ username: 'Deus Rei Varus' }, {
+  $set: {
+    'topFiveKDA.2': 20
+  }
+});
+
+/* 
+* Realiza um update em um array de um documento, utilizando um indíce dinâmico para definir
+* qual item do array atualizar, esse indíce dinâmico é obtido através de um filto definido
+* no primeiro objeto ( obrigatoriamente deve estar na segunda posição ) a ser passado ao método update,
+* o método itera sobre o array e o item que cumprir a condição passada acima é atualizado.
+*/
+db.users.updateMany(
+  {
+    cristals: { $gt: 10000 } // Todos documentos em que o valor de cristals seja maior que 10000.
+    topFiveKDA: { $gte: 20 } /* Dentro do array que quero atualizar, 
+                              * irei procurar os indíces (posição do elemento no array) de todos os 
+                              * numeros maiores ou iguais a 20.
+                              */
+  }, {
+    $set: {
+      'topFiveKDA.$': 15 /* O $ representa o indice do array, esse $ é preenchido automaticamente pelo indíce
+                          * do item que atender a condição passada no primeiro objeto, segunda posição.
+                          * Todos os numeros maiores ou iguais a 20 dentro do array topFiveKDA serão 
+                          * substituidos por 15.
+                          */ 
+    }
+  }
+);
+
+// Realiza um update fazendo uma operação de soma no campo passado: valor atual do campo + valor passado abaixo
+db.users.updateOne({ username: 'Hevy' }, {
+  $inc: { // increment
+    'topFiveKDA.0': 10, // 2 + 10 = 12
+  }
+});
+
+/* 
+* Determina um valor minimo para um campo, caso algum documento contenha este campo com um valor menor
+* que o minimo, este valor é atualizado para o valor minimo definido abaixo.
+*/
+db.users.updateMany({}, {
+  $min: {
+    cristals: 8000
+  }
+});
+
+// Mesmo conceito do $min, mas com o $max, valores que ultrapassem o máximo serão substituidos, pelo valor máximo definido abaixo.
+db.users.updateMany({}, {
+  $max: {
+    cristals: 50000
+  }
+});
+
+// Atualiza um campo passando a data atual para o mesmo. $currentDate.
+db.users.updateMany({}, {
+  $currentDate: {
+    updatedAt: true,
+  }
+});
+
+// Renomeia um campo utilizando $rename.
+db.users.updateMany({}, {
+  $rename: {
+    'playDaysCount': 'daysPlayed'
+  }
+});
+
+// Execute a operação acima para que esta funcione !!.
+// Exclui um campo dos documentos que atendem a condição passada.
+db.users.updateMany({ daysPlayed: { $lt: 300 } }, {
+  $unset: {
+    topFiveKDA: '',
+  }
+});

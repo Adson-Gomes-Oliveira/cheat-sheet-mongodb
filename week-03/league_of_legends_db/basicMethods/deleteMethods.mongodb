@@ -1,0 +1,10 @@
+/*
+* Os métodos de delete aceitam os mesmos filtros do find
+* mas ao invés de apenas encontrar um documento o método
+* irá encontrar o documento que atenda as condições e apaga-lo.
+*/
+// Apagando o documento que contenha a propriedade name = Renekton.
+db.champions.deleteOne({ name: 'Renekton'  });
+
+// Apagando todos os documentos que atendam a condição passada.
+db.champions.deleteMany({ 'stats.hp': { $gt: 600 } });
